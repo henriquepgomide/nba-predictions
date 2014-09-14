@@ -1,0 +1,9 @@
+{
+    "path" : "~/nba",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}

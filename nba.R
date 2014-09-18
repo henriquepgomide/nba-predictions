@@ -3,12 +3,15 @@ library(caret)
 library(rpart)
 library(rpart.plot)
 library(RWeka)
+library(tm)
+library(plyr)
+
 
 ## Set working directory
 setwd("~/nba-predictions/")
 
 ## Open csv
-nba  <- read.csv("nba_stats.csv")
+nba  <- read.csv("nba_stats_13-14.csv")
 
 ## Open Team %
 teamPer  <- read.csv("teamStats.csv")
@@ -44,7 +47,7 @@ glmModel  <- train(custom ~ . ,
 summary(glmModel)
 
 ## Predict
-predictGlm  <- predict(glmModel, newdata = testing)
+predictGlm  <- predict(custom, newdata = testing)
 mean(sqrt((testing$custom - predictGlm)^2), na.rm = TRUE)
 summary(testing$custom)
 
@@ -55,7 +58,7 @@ mpartPred  <- predict(mpartModel, newdata = testing)
 mean(sqrt((testing$custom - mpartPred)^2))
 
 summary(mpartModel)
-#rpart.plot(mpartModel, type =3, fallen.leaves = TRUE)
+rpart.plot(mpartModel, type =3, fallen.leaves = TRUE)
 
 ## M5P - Weka
 m5pModel  <- M5P(custom ~ . , data = training)
@@ -97,7 +100,7 @@ nbaFantasy  <- function(csv, position) {
 }
 
 ## Three year analysis
-nba2k4 <- read.csv("nba_stats13-14.csv")
+nba2k4 <- read.csv("nba_stats_13-14.csv")
 nba2k3 <- read.csv("nba_stats_12-13.csv")
 nba2k2 <- read.csv("nba_stats_11-12.csv")
 
@@ -132,7 +135,15 @@ nba$FAN  <- as.character(nba$FAN)
 
 # Explore
 #print
-nbaList <- nba[ order(-nba[,53]), c(1,35,36,52,53,54,51,55)]
-
-nbaList <- subset(nbaList, nbaList$P=="F" | nbaList$P=="GF")
+nbaList <- nba[ order(-nba[,51]), c(1,35,36,52,53,54,51,55)]
+nbaList <- subset(nbaList, nbaList$P=="G" | nbaList$P=="GF")
 nbaList
+
+
+# Prediction
+prediction <- tapply(nba2k4$FPPM, nba2k4$FAN, mean)
+prediction
+pred <- data.frame(prediction)
+
+cbind(sort(pred$prediction, decreasing = TRUE))
+boxplot(pred$prediction)

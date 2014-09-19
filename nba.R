@@ -139,11 +139,12 @@ nbaList <- nba[ order(-nba[,51]), c(1,35,36,52,53,54,51,55)]
 nbaList <- subset(nbaList, nbaList$P=="G" | nbaList$P=="GF")
 nbaList
 
-
 # Prediction
-prediction <- tapply(nba2k4$FPPM, nba2k4$FAN, table)
+prediction <- tapply(nba2k4$FPPM, nba2k4$FAN, mean)
 prediction
 pred <- data.frame(prediction)
 
-cbind(sort(pred$prediction, decreasing = TRUE))
-boxplot(pred$prediction)
+c  <- ggplot(pred, aes(prediction))
+c + geom_bar()
+
+factor(pred$prediction)

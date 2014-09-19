@@ -141,7 +141,7 @@ nbaList
 
 
 # Prediction
-prediction <- tapply(nba2k4$FPPM, nba2k4$FAN, mean)
+prediction <- tapply(nba2k4$FPPM, nba2k4$FAN, table)
 prediction
 pred <- data.frame(prediction)
 

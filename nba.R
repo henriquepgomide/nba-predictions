@@ -140,11 +140,17 @@ nbaList <- subset(nbaList, nbaList$P=="G" | nbaList$P=="GF")
 nbaList
 
 # Prediction
-prediction <- tapply(nba2k4$FPPM, nba2k4$FAN, mean)
+prediction <- tapply(nba2k4$FPPM, nba2k4$FAN, table)
 prediction
 pred <- data.frame(prediction)
+pred
 
-c  <- ggplot(pred, aes(prediction))
-c + geom_bar()
+plot(sort(pred$prediction, decreasing = TRUE), levels(pred$prediction), col="blue", ylab="Média de FPMM", pch = 20 )
+abline(h = mean(pred$prediction), lty = 3, col="red")
+
+qplot(pred, (aes = prediction), geom = "bar")
+
+
+bind(sort(pred$prediction, decreasing = TRUE))
 
 factor(pred$prediction)
